@@ -1,0 +1,30 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: dispatcher
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+    name: Dispatch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Loop
+        run: |
+          mapfile -t listRepos < listRepos.csv
+          listRepos=("${listRepos[@]/,/***}")
+          for x in listRepos; do
+            echo "$x"
+          done

@@ -23,8 +23,6 @@ jobs:
 
       - name: Loop
         run: |
-          mapfile -t listRepos < listRepos.csv
-          listRepos=("${listRepos[@]/,/***}")
-          for x in listRepos; do
-            echo "$x"
-          done
+          mapfile -t array < IPPairs.csv
+          echo ${array[*]}
+          

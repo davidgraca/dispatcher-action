@@ -5,8 +5,7 @@
 
 name: dispatcher
 
-on:
-  workflow_dispatch:
+on: [workflow_dispatch,push]
 
 permissions:
   contents: read

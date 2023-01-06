@@ -23,6 +23,6 @@ jobs:
 
       - name: Loop
         run: |
-          mapfile -t array < IPPairs.csv
+          mapfile -t array < ListRepos.csv
           echo ${array[*]}
           

@@ -22,6 +22,6 @@ jobs:
 
       - name: Loop
         run: |
-          mapfile -t array < ListRepos.csv
+          mapfile -t array < listRepos.csv
           echo ${array[*]}
           

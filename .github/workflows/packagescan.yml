@@ -106,6 +106,8 @@ jobs:
         run: |
           go install github.com/google/osv-scanner/cmd/osv-scanner@v1
           export PATH=${PATH}:`go env GOPATH`/bin
+          osv-scanner -r .
+          ls
           echo $(osv-scanner --json -r .) > osvscan.json 
       
       - name: Archive osv results
@@ -147,6 +149,7 @@ jobs:
       - name: upload Anchore scan SARIF report
         uses: actions/upload-artifact@v3.1.1
         with:
+          name: sbom-scan
           path: ${{ steps.scan.outputs.sarif }}
       
       - name: Inspect action SARIF report

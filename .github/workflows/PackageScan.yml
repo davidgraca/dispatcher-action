@@ -1,9 +1,14 @@
 name: 'Package Scan'
 on:
   workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repo URL to scan'     
+        required: true
+        default: 'warning'
 
 permissions:
-  contents: write
+  contents: read
 
 # This allows a subsequently queued workflow run to interrupt previous runs
 concurrency:

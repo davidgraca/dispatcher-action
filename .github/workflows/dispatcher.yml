@@ -5,7 +5,7 @@
 
 name: dispatcher
 
-on: [workflow_dispatch,push]
+on: [workflow_dispatch,push,repository_dispatch]
 
 env:
     GH_TOKEN: ${{ secrets.GH_CRAWLER_TOKEN }}
@@ -37,6 +37,7 @@ jobs:
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}'
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}' | gh workflow run packagescan.yml --json
               echo gh run watch
+              sleep 60
 
           done
           

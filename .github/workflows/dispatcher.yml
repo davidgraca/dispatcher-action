@@ -33,8 +33,10 @@ jobs:
               
               replace='/'
               name="${repo//${replace}/' in '}" 
+              echo 'Analyzing repo... \n"
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}'
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}' | gh workflow run packagescan.yml --json
-              sleep 30
+              gh run watch
+
           done
           

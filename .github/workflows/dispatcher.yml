@@ -10,8 +10,7 @@ on: [workflow_dispatch,push]
 env:
     GH_TOKEN: ${{ github.token }}
 
-permissions:
-  contents: read
+permissions: read-all
 
 jobs:
   dispatch:

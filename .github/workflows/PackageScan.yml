@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          repository:  ${{ github.event.inputs.repo }}
 
       - name: Run Trivy vulnerability
         uses: aquasecurity/trivy-action@master

@@ -1,0 +1,70 @@
+name: 'Package Scan'
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+
+# trivy scan IaC and secrets
+  trivy:
+    name: Trivy vuln
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'cyclonedx'
+          security-checks: 'vuln'
+          output: 'trivy-results.cdx.json'
+          severity: 'CRITICAL,HIGH'
+    
+      - name: Archive Trivy results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-results
+          path: trivy-results.cdx.json
+          if-no-files-found: ignore
+
+      - name: Run Trivy secret
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'json'
+          security-checks: 'secret'
+          output: 'trivy-secrets.json'
+      
+      - name: Archive Trivy results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-results
+          path: trivy-secrets.json
+          if-no-files-found: ignore
+          
+      - name: Run Trivy config
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'json'
+          security-checks: 'config'
+          output: 'trivy-config.json'
+      
+      - name: Archive Trivy results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-config
+          path: trivy-config.json
+          if-no-files-found: ignore

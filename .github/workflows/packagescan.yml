@@ -118,3 +118,36 @@ jobs:
       - name: summary
         run: |
           echo -e $(cat osvscan.json) >> $GITHUB_STEP_SUMMARY
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+    
+    # Checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository:  ${{ github.event.inputs.repo }}
+    
+    # Create SBOM
+      - name: Anchore SBOM Action
+        uses: anchore/sbom-action@v0.13.1
+        with:
+          format: spdx-json
+          output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+    
+    # Scan SBOM
+      - name: Anchore Container Scan
+        uses: anchore/scan-action@v3.3.2
+        id: scan
+        with:
+          sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
+          fail-build: "false"
+          severity-cutoff: negligible
+          
+      - name: upload Anchore scan SARIF report
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          path: ${{ steps.scan.outputs.sarif }}
+      
+      - name: Inspect action SARIF report
+        run: cat ${{ steps.scan.outputs.sarif }}

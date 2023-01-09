@@ -90,36 +90,6 @@ jobs:
           path: trivy-config.json
           if-no-files-found: ignore
           
-    #SCA Vulnerabilty scaneer OSV scanner       
-  osv-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          repository:  ${{ github.event.inputs.repo }}
-      
-      - name: Setup Go environment
-        uses: actions/setup-go@v3.5.0
-      
-      - name: check go version
-        id: osvscan
-        run: |
-          go install github.com/google/osv-scanner/cmd/osv-scanner@v1
-          export PATH=${PATH}:`go env GOPATH`/bin
-          osv-scanner -r .
-          ls
-          echo $(osv-scanner --json -r .) > osvscan.json 
-      
-      - name: Archive osv results
-        uses: actions/upload-artifact@v3
-        with:
-          name: scan-results
-          path: osvscan.json
-          if-no-files-found: ignore
-          
-      - name: summary
-        run: |
-          echo -e $(cat osvscan.json) >> $GITHUB_STEP_SUMMARY
   sbom:
     runs-on: ubuntu-latest
     steps:
@@ -135,14 +105,14 @@ jobs:
         uses: anchore/sbom-action@v0.13.1
         with:
           format: spdx-json
-          output-file: "${{ github.event.inputs.repo }}-sbom.spdx.json"
+          output-file: "anchore-sbom.spdx.json"
     
     # Scan SBOM
       - name: Anchore Container Scan
         uses: anchore/scan-action@v3.3.2
         id: scan
         with:
-          sbom: "${{ github.event.inputs.repo }}-sbom.spdx.json"
+          sbom: "anchore-sbom.spdx.json"
           fail-build: "false"
           severity-cutoff: negligible
           

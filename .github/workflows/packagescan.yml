@@ -38,7 +38,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: trivy-results
+          name: scan-results
           path: trivy-vulns.json
           if-no-files-found: ignore
 
@@ -54,7 +54,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: trivy-results
+          name: scan-results
           path: trivy-results.cdx.json
           if-no-files-found: ignore
 
@@ -70,7 +70,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: trivy-results
+          name: scan-results
           path: trivy-secrets.json
           if-no-files-found: ignore
           
@@ -86,7 +86,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: trivy-results
+          name: scan-results
           path: trivy-config.json
           if-no-files-found: ignore
           
@@ -113,7 +113,7 @@ jobs:
       - name: Archive osv results
         uses: actions/upload-artifact@v3
         with:
-          name: osv-scan
+          name: scan-results
           path: osvscan.json
           if-no-files-found: ignore
           
@@ -135,21 +135,21 @@ jobs:
         uses: anchore/sbom-action@v0.13.1
         with:
           format: spdx-json
-          output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+          output-file: "${{ github.event.inputs.repo }}-sbom.spdx.json"
     
     # Scan SBOM
       - name: Anchore Container Scan
         uses: anchore/scan-action@v3.3.2
         id: scan
         with:
-          sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
+          sbom: "${{ github.event.inputs.repo }}-sbom.spdx.json"
           fail-build: "false"
           severity-cutoff: negligible
           
       - name: upload Anchore scan SARIF report
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: sbom-scan
+          name: scan-results
           path: ${{ steps.scan.outputs.sarif }}
       
       - name: Inspect action SARIF report

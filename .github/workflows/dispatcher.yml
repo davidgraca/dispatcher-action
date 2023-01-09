@@ -10,7 +10,7 @@ on: [workflow_dispatch,push]
 env:
     GH_TOKEN: ${{ secrets.GH_CRAWLER_TOKEN }}
 
-permissions: read-all|write-all
+permissions: read-all
 
 jobs:
   dispatch:

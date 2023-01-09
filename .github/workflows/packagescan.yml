@@ -5,6 +5,9 @@ on:
       repo:
         description: 'Repo URL to scan'     
         required: true
+      packagename:
+        description: 'Package name'
+        required: true
 
 permissions:
   contents: read
@@ -38,7 +41,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: scan-results
+          name: ${{ github.event.inputs.packagename }}-results
           path: trivy-vulns.json
           if-no-files-found: ignore
 
@@ -54,7 +57,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: scan-results
+          name: ${{ github.event.inputs.packagename }}-results
           path: trivy-results.cdx.json
           if-no-files-found: ignore
 
@@ -70,7 +73,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: scan-results
+          name: ${{ github.event.inputs.packagename }}-results
           path: trivy-secrets.json
           if-no-files-found: ignore
           
@@ -86,7 +89,7 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: scan-results
+          name: ${{ github.event.inputs.packagename }}-results
           path: trivy-config.json
           if-no-files-found: ignore
           
@@ -115,11 +118,17 @@ jobs:
           sbom: "anchore-sbom.spdx.json"
           fail-build: "false"
           severity-cutoff: negligible
-          
+      
+      - name: upload Anchore scan SBOM
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: ${{ github.event.inputs.packagename }}-results
+          path: "anchore-sbom.spdx.json"
+      
       - name: upload Anchore scan SARIF report
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: scan-results
+          name: ${{ github.event.inputs.packagename }}-results
           path: ${{ steps.scan.outputs.sarif }}
       
       - name: Inspect action SARIF report

@@ -31,10 +31,25 @@ jobs:
         with:
           scan-type: 'fs'
           ignore-unfixed: true
+          format: 'json'
+          security-checks: 'vuln'
+          output: 'trivy-vulns.json'
+    
+      - name: Archive Trivy results
+        uses: actions/upload-artifact@v3
+        with:
+          name: trivy-results
+          path: trivy-vulns.json
+          if-no-files-found: ignore
+
+      - name: Run Trivy vulnerability
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
           format: 'cyclonedx'
           security-checks: 'vuln'
           output: 'trivy-results.cdx.json'
-          severity: 'CRITICAL,HIGH'
     
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
@@ -71,6 +86,6 @@ jobs:
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
-          name: trivy-config
+          name: trivy-results
           path: trivy-config.json
           if-no-files-found: ignore

@@ -8,7 +8,7 @@ name: dispatcher
 on: [workflow_dispatch,push]
 
 env:
-    GH_TOKEN: ${{ github.token }}
+    GH_TOKEN: ${{ secrets.GH_CRAWLER_TOKEN }}
 
 permissions: read-all|write-all
 

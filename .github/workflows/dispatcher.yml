@@ -26,8 +26,12 @@ jobs:
           
           for i in "${array[@]}"
           do
-             $temp = echo tr 'https://github.com/' '' <<<"$i"
-             $temp = echo tr '/' '-' <<<"$temp"
-             echo $temp
+              replace="https://github.com/"
+              repo="${i//${replace}/''}"
+              
+              replace='/'
+              temp="${repo//${replace}/''}" 
+              echo $temp
+              echo '{"repo":$repo, "packagename":$temp}' | gh workflow run triage.yml --json
           done
           

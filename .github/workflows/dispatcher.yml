@@ -35,5 +35,6 @@ jobs:
               name="${repo//${replace}/' in '}" 
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}'
               echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}' | gh workflow run packagescan.yml --json
+              sleep 30
           done
           

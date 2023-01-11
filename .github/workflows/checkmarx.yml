@@ -2,13 +2,6 @@
 name: 'Checkmarx'
 on:
   workflow_dispatch:
-    inputs:
-      repo:
-        description: 'Repo URL to scan'     
-        required: true
-      packagename:
-        description: 'Package name'
-        required: true
 
 permissions:
   contents: read

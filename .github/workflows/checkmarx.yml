@@ -19,3 +19,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  
+    checkmarx:
+      permissions: 
+        contents: read # for actions/checkout to fetch code
+      name: Dispatch
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkmarx AST Github Action
+        uses: Checkmarx/ast-github-action@2.0.9
+        with:
+          # Provide the AST portal URL
+          base_uri: 'https://eu.ast.checkmarx.net/'
+          # Provide the Tenant for AST portal URL
+          cx_tenant: 'axago-fr54gt'
+          # Client ID for AST portal authentication
+          cx_client_id: 'Github-Action'
+          # Secret key for AST portal authentication
+          cx_client_secret: ${{github.secrets.CHECKMARX_SECRET}}
+          # Select a Checkmarx Project Name
+          project_name: 'reponame1'
+  
+     

@@ -5,7 +5,7 @@ repo_file_list='listRepos.csv'
 package_scan() {
 	workflow_name='Package Scan'
 	echo 'Analyzing packages...'
-	gh workflow run packagescan.yml --field repo="$reponame/$username" --field packagename="${username}_$reponame"
+	gh workflow run packagescan.yml --field repo="$reponame/$username" --field packagename="test"
 	last_workflow_run_id="$(gh run list --workflow "$workflow_name" --json databaseId --jq '.[]| .databaseId' --limit 1)"
 	gh run watch --interval 1 --exit-status "$last_workflow_run_id" &> /dev/null
 }

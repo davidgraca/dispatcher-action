@@ -7,7 +7,7 @@ package_scan() {
 	echo 'Analyzing packages...'
 	gh workflow run packagescan.yml --field repo="$reponame/$username" --field packagename="${username}_$reponame"
 	last_workflow_run_id="$(gh run list --workflow "$workflow_name" --json databaseId --jq '.[]| .databaseId' --limit 1)"
-	gh run watch --interval 1 --exit-status "$last_workflow_run_id"
+	gh run watch --interval 1 --exit-status "$last_workflow_run_id" &> /dev/null
 }
 
 counter=1

@@ -1,0 +1,21 @@
+
+name: 'Checkmarx'
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repo URL to scan'     
+        required: true
+      packagename:
+        description: 'Package name'
+        required: true
+
+permissions:
+  contents: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:

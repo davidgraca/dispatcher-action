@@ -3,7 +3,7 @@
 repo_file_list='listRepos.csv'
 
 fix_workflow_queue() {
-	gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1
+	gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
 }
 
 package_scan() {
@@ -16,6 +16,8 @@ package_scan() {
 	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'
 	echo 'Workflow exited'
 }
+
+fix_workflow_queue
 
 counter=1
 number_of_lines=$(wc -l < "$repo_file_list")

@@ -6,7 +6,7 @@ repo_file_list='listRepos.csv'
 gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
 
 counter=1
-number_of_lines="$(sed '/^\s*#/d;/^\s*$/d' "$repo_file_list" | wc -l)"
+number_of_lines="$(sed '/^\s*#/d;/^\s*$/d' $repo_file_list | wc -l)"
 while IFS="" read -r line || [ -n "$line" ]
 do
 	url="${line%/}" # Remove trailing slash

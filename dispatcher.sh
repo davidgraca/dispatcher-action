@@ -13,7 +13,7 @@ package_scan() {
 	last_workflow_run_id="$(gh run list --workflow "$workflow_name" --json databaseId --jq '.[]| .databaseId' --limit 1)"
 	echo "Started workflow $last_workflow_run_id"
 	echo 'Waiting for workflow to finish...'
-	gh run watch --interval 1 --exit-status "$last_workflow_run_id" > /dev/null
+	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'
 	echo 'Workflow exited'
 }
 

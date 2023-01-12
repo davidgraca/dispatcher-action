@@ -12,8 +12,7 @@ package_scan() {
 	gh run watch --interval 1 --exit-status "$last_workflow_run_id"
 	echo 'Workflow exited'
 }
-
-echo "${url#/*}"
+gh run list --workflow "dispatcher" --json databaseId --jq '.[]| .databaseId' --limit 1
 
 counter=1
 number_of_lines=$(wc -l < "$repo_file_list")

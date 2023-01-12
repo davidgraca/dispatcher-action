@@ -17,7 +17,6 @@ package_scan() {
 	echo 'Workflow exited'
 }
 
-fix_workflow_queue
 
 counter=1
 number_of_lines=$(wc -l < "$repo_file_list")
@@ -28,6 +27,7 @@ do
 	repo_slash_user="${url#*.*/}"
 	username="${repo_slash_user%/*}"
 	printf "Analyzing %s (%d/%d)...\n" "$repo_slash_user" "$counter" "$number_of_lines"
+	fix_workflow_queue
 	package_scan
 	counter=$((counter+1))
 done < "$repo_file_list"

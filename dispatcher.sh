@@ -16,7 +16,7 @@ counter=1
 number_of_lines=$(wc -l < "$repo_file_list")
 while IFS="" read -r line || [ -n "$line" ]
 do
-	url="${url%/}" # Remove trailing slash
+	url="${line%/}" # Remove trailing slash
 	reponame="${url##*/}"
 	repo_slash_user="${url%/*#*.*/}"
 	username="${repo_slash_user%/*}"

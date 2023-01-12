@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Repo URL to scan'     
+        description: 'Repo URL to scan'
         required: true
       packagename:
         description: 'Package name'
@@ -37,7 +37,7 @@ jobs:
           format: 'json'
           security-checks: 'vuln'
           output: 'trivy-vulns.json'
-    
+
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
@@ -53,7 +53,7 @@ jobs:
           format: 'cyclonedx'
           security-checks: 'vuln'
           output: 'trivy-results.cdx.json'
-    
+
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
@@ -69,14 +69,14 @@ jobs:
           format: 'json'
           security-checks: 'secret'
           output: 'trivy-secrets.json'
-      
+
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.packagename }}-results
           path: trivy-secrets.json
           if-no-files-found: ignore
-          
+
       - name: Run Trivy config
         uses: aquasecurity/trivy-action@master
         with:
@@ -85,24 +85,24 @@ jobs:
           format: 'json'
           security-checks: 'config'
           output: 'trivy-config.json'
-      
+
       - name: Archive Trivy results
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.packagename }}-results
           path: trivy-config.json
           if-no-files-found: ignore
-          
+
   sbom:
     runs-on: ubuntu-latest
     steps:
-    
+
     # Checkout
       - name: Checkout
         uses: actions/checkout@v3
         with:
           repository:  ${{ github.event.inputs.repo }}
-    
+
     # Create SBOM
       - name: Anchore SBOM Action
         uses: anchore/sbom-action@v0.13.1
@@ -110,7 +110,7 @@ jobs:
           artifact-name: ${{ github.event.inputs.packagename }}
           format: spdx-json
           output-file: "anchore-sbom.spdx.json"
-    
+
     # Scan SBOM
       - name: Anchore Container Scan
         uses: anchore/scan-action@v3.3.2
@@ -119,18 +119,18 @@ jobs:
           sbom: "anchore-sbom.spdx.json"
           fail-build: "false"
           severity-cutoff: negligible
-      
+
       - name: upload Anchore scan SBOM
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ github.event.inputs.packagename }}-results
           path: "anchore-sbom.spdx.json"
-      
+
       - name: upload Anchore scan SARIF report
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ github.event.inputs.packagename }}-results
           path: ${{ steps.scan.outputs.sarif }}
-      
+
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}

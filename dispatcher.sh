@@ -7,7 +7,7 @@ package_scan() {
 	echo 'Analyzing packages...'
 	gh workflow run packagescan.yml --field repo="$reponame/$username" --field packagename="test"
 	last_workflow_run_id="$(gh run list --workflow "$workflow_name" --json databaseId --jq '.[]| .databaseId' --limit 1)"
-	gh run watch --interval 1 --exit-status "$last_workflow_run_id" &> /dev/null
+	#gh run watch --interval 1 --exit-status "$last_workflow_run_id" &> /dev/null
 }
 
 counter=1
@@ -16,7 +16,7 @@ while IFS="" read -r url || [ -n "$url" ]
 do
 	reponame="$(basename "${url%.*}")"
 	username="$(basename "${url%.*%/"${reponame}"}")"
-	printf "Analyzing %s/%s (%d/%d)...\n\n" "$username" "$reponame" "$counter" "$number_of_lines"
+	printf "Analyzing %s/%s (%d/%d)...\n" "$username" "$reponame" "$counter" "$number_of_lines"
 	package_scan
 	counter=$((counter+1))
 done < "$repo_file_list"

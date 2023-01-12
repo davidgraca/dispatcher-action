@@ -17,8 +17,6 @@ package_scan() {
 	echo 'Workflow exited'
 }
 
-fix_workflow_queue
-
 counter=1
 number_of_lines=$(wc -l < "$repo_file_list")
 while IFS="" read -r line || [ -n "$line" ]

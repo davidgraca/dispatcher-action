@@ -13,7 +13,7 @@ package_scan() {
 
 secret_scan() {
 	echo "[*] - Starting secret scan workflow on $repo_slash_user..."
-	gh workflow run packagescan.yml --field repo="$repo_slash_user" --field packagename="${username}_$reponame"
+	gh workflow run secretscan.yml --field repo="$repo_slash_user" --field packagename="${username}_$reponame"
 	last_workflow_run_id="$(gh run list --workflow 'Secret Scan' --json databaseId --jq '.[]| .databaseId' --limit 1)"
 	echo '[*] - Waiting for secret scan workflow to finish...'
 	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'

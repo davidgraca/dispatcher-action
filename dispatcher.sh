@@ -18,7 +18,7 @@ while IFS="" read -r line || [ -n "$line" ]
 do
 	url="${line%/}" # Remove trailing slash
 	reponame="${url##*/}"
-	repo_slash_user="${url%/*#*.*/}"
+	repo_slash_user="${url#*.*/}"
 	username="${repo_slash_user%/*}"
 	printf "Analyzing %s (%d/%d)...\n" "$repo_slash_user" "$counter" "$number_of_lines"
 	package_scan

@@ -2,11 +2,8 @@
 
 repo_file_list='listRepos.csv'
 
-fix_workflow_queue() {
-	gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
-}
-
-fix_workflow_queue
+# Fix for workflow queue
+gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
 
 counter=1
 number_of_lines=$(wc -l < "$repo_file_list")
@@ -16,14 +13,15 @@ do
 	reponame="${url##*/}"
 	repo_slash_user="${url#*.*/}"
 	username="${repo_slash_user%/*}"
-	printf "Analyzing %s (%d/%d)...\n" "$repo_slash_user" "$counter" "$number_of_lines"
+	echo
+	echo "----- $repo_slash_user ($counter/$number_of_lines) -----"
 
-	echo 'Starting package scan workflow...'
+	echo "[*] - Starting package scan workflow on $repo_slash_user..."
 	gh workflow run packagescan.yml --field repo="$repo_slash_user" --field packagename="${username}_$reponame"
 	last_workflow_run_id="$(gh run list --workflow 'Package Scan' --json databaseId --jq '.[]| .databaseId' --limit 1)"
-	echo 'Waiting for workflow to finish...'
+	echo '[*] - Waiting for package scan workflow to finish...'
 	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'
-	echo 'Workflow exited'
+	echo '[+] - Package scan workflow exited'
 
 	counter=$((counter+1))
 done < "$repo_file_list"

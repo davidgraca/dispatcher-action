@@ -2,7 +2,13 @@
 name: 'Checkmarx'
 on:
   workflow_dispatch:
-
+    inputs:
+      repo:
+        description: 'Repo URL to scan'
+        required: true
+      packagename:
+        description: 'Package name'
+        required: true
 permissions:
   contents: read
 
@@ -19,6 +25,11 @@ jobs:
       name: Dispatch
       runs-on: ubuntu-latest
       steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          repository: ${{ github.event.inputs.repo }}
+      
       - name: Checkmarx AST Github Action
         uses: Checkmarx/ast-github-action@2.0.9
         with:

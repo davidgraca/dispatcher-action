@@ -44,7 +44,7 @@ jobs:
           # Select a Checkmarx Project Name
           project_name: '${{ github.event.inputs.repo }}'
           # Additional CLI arguments
-          additional_params: '--file-filter !readme --report-format sarif --output-path .'
+          additional_params: '--file-filter !readme --report-format sarif --output-path . --scan-types sast,cxgo,sca,api_security'
       
       - name: Archive Checkmarx results
         uses: actions/upload-artifact@v3

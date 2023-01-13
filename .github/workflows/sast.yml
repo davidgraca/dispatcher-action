@@ -42,11 +42,13 @@ jobs:
           # Secret key for AST portal authentication
           cx_client_secret: ${{secrets.CHECKMARX_SECRET}}
           # Select a Checkmarx Project Name
-          project_name: '${{ github.event.repository.name }}'
+          project_name: '${{ github.event.inputs.repo }}'
           # Additional CLI arguments
-          additional_params: '--file-filter !readme --report-format sarif --output-name results'
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v1
+          additional_params: '--file-filter !readme --report-format sarif --output-path .'
+      
+      - name: Archive Checkmarx results
+        uses: actions/upload-artifact@v3
         with:
-          # Path to SARIF file relative to the root of the repository
-          sarif_file: results.sarif
+          name: ${{ github.event.inputs.packagename }}-results
+          path: results.sarif
+          if-no-files-found: ignore

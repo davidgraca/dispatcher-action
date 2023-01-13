@@ -18,5 +18,5 @@ cx results show --scan-id <scan-id> --output-name report --report-format json --
 Clear previous runs:
 
 ```bash
-gh api repos/davidgraca/dispatcher-action/actions/runs --paginate -q '.workflow_runs[] | select(.head_branch != "main") | "\(.id)"' | xargs -n1 -I % gh api repos/davidgraca/dispatcher-action/actions/runs/% -X DELETE
+gh api repos/davidgraca/dispatcher-action/actions/runs --paginate -q '.workflow_runs[] | select(.head_branch) | "\(.id)"' | xargs -n1 -I % gh api repos/davidgraca/dispatcher-action/actions/runs/% -X DELETE
 ```

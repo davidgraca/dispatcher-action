@@ -50,5 +50,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.inputs.packagename }}-results
-          path: results.sarif
+          path: cx_result.sarif
           if-no-files-found: ignore

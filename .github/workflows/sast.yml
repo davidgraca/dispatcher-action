@@ -31,7 +31,7 @@ jobs:
           repository: ${{ github.event.inputs.repo }}
       
       - name: Checkmarx AST Github Action
-        uses: Checkmarx/ast-github-action@2.0.9
+        uses: Checkmarx/ast-github-action@2.0.13
         with:
           # Provide the AST portal URL
           base_uri: 'https://eu.ast.checkmarx.net/'
@@ -44,7 +44,7 @@ jobs:
           # Select a Checkmarx Project Name
           project_name: '${{ github.event.inputs.repo }}'
           # Additional CLI arguments
-          additional_params: '--file-filter !readme --report-format sarif --output-path . --scan-types sast,cxgo,sca,api_security'
+          additional_params: '--file-filter !readme --report-format sarif --output-path . --scan-types sast,iac-security,sca,api-security'
       
       - name: Archive Checkmarx results
         uses: actions/upload-artifact@v3

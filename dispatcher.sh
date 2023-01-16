@@ -43,7 +43,7 @@ do
 	username="${repo_slash_user%/*}"
 	echo
 	echo "----- $repo_slash_user ($counter/$real_number_of_lines) -----"
-	package_scan
+	
 	secret_scan
 	sast_scan
 	counter=$((counter+1))

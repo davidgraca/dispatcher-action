@@ -5,7 +5,7 @@
 
 name: dispatcher
 
-on: [workflow_dispatch,push,repository_dispatch]
+on: [workflow_dispatch]
 
 env:
     GH_TOKEN: ${{ secrets.GH_CRAWLER_TOKEN }}
@@ -23,21 +23,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Loop
-        run: |
-          mapfile -t array < listRepos.csv
-          
-          for i in "${array[@]}"
-          do
-              replace="https://github.com/"
-              repo="${i//${replace}/''}"
-              
-              replace='/'
-              name="${repo//${replace}/' in '}" 
-              echo 'Analyzing repo... \n'
-              echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}'
-              echo $'{"repo":"'${repo}'", "packagename":"'${name}'"}' | gh workflow run packagescan.yml --json
-              echo gh run watch
-              sleep 60
-
-          done
-          
+        run: bash dispatcher.sh

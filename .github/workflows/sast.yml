@@ -1,0 +1,54 @@
+
+name: 'Checkmarx'
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repo URL to scan'
+        required: true
+      packagename:
+        description: 'Package name'
+        required: true
+permissions:
+  contents: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: false
+
+jobs:
+
+    checkmarx:
+      permissions:
+        contents: read # for actions/checkout to fetch code
+      name: Dispatch
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          repository: ${{ github.event.inputs.repo }}
+      
+      - name: Checkmarx AST Github Action
+        uses: Checkmarx/ast-github-action@2.0.13
+        with:
+          # Provide the AST portal URL
+          base_uri: 'https://eu.ast.checkmarx.net/'
+          # Provide the Tenant for AST portal URL
+          cx_tenant: 'axago-fr54gt'
+          # Client ID for AST portal authentication
+          cx_client_id: 'Github-Action'
+          # Secret key for AST portal authentication
+          cx_client_secret: ${{secrets.CHECKMARX_SECRET}}
+          # Select a Checkmarx Project Name
+          project_name: '${{ github.event.inputs.repo }}'
+          # Additional CLI arguments
+          additional_params: '--file-filter !readme --report-format sarif --output-path . --scan-types sast,iac-security,sca,api-security'
+      
+      - name: Archive Checkmarx results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.inputs.packagename }}-results
+          path: cx_result.sarif
+          if-no-files-found: ignore

@@ -30,4 +30,7 @@ jobs:
       - name: Git AV Scan
         run: |
           docker pull clamav/clamav
+          docker run -it --rm --name "clam_container_01" clamav:TICKET-123
+          docker run -it --rm --mount type=bind,source=/,target=/scandir clamav/clamav:unstable clamscan /scandir
+
 

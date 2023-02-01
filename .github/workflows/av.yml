@@ -1,4 +1,4 @@
-name: 'Package Scan'
+name: 'Anti Virus scan'
 on:
   workflow_dispatch:
     inputs:

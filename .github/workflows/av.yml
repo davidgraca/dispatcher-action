@@ -20,7 +20,7 @@ concurrency:
 jobs:
   clamav:
     name: ClamAV
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -29,8 +29,7 @@ jobs:
 
       - name: Git AV Scan
         run: |
-          docker pull -t clamav/clamav:latest
-          docker run -it --rm --name "clam_container_01" clamav:TICKET-123
-          docker run -it --rm --mount type=bind,source=/,target=/scandir clamav/clamav:latest clamscan /scandir
+          docker pull clamav/clamav:latest
+          docker run  --rm --mount type=bind,source=/,target=/scandir clamav/clamav:latest clamscan /scandir
 
 

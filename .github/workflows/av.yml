@@ -27,4 +27,7 @@ jobs:
         with:
           repository:  ${{ github.event.inputs.repo }}
 
-     
+      - name: Git AV Scan
+        run: |
+          docker pull clamav/clamav
+

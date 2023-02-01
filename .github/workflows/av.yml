@@ -30,6 +30,6 @@ jobs:
       - name: Git AV Scan
         run: |
           docker pull clamav/clamav:latest
-          docker run  --rm --mount type=bind,source=/,target=/scandir clamav/clamav:latest clamscan /scandir
+          docker run  --rm --mount type=bind,source=.,target=/scandir clamav/clamav:latest clamscan /scandir
 
 

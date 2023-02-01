@@ -31,6 +31,6 @@ jobs:
         run: |
           pwd
           docker pull clamav/clamav:latest
-          docker run  --rm --mount type=bind,source=.,target=/scandir clamav/clamav:latest clamscan /scandir
+          docker run  --rm --mount type=bind,source=/home/runner/work/dispatcher-action/dispatcher-action,target=/scandir clamav/clamav:latest clamscan /scandir
 
 

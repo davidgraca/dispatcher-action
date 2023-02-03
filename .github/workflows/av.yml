@@ -30,10 +30,12 @@ jobs:
       - name: Git AV Scan
         run: |
           docker pull clamav/clamav:latest
-          echo "$(docker run --rm --mount type=bind,source=/home/runner/work/dispatcher-action/dispatcher-action,target=/scandir clamav/clamav:latest clamscan -r -l scan.log /scandir)" > output.log
-          clamav_output='output.log'
+          docker run --rm --mount type=bind,source=/home/runner/work/dispatcher-action/dispatcher-action,target=/scandir clamav/clamav:latest clamscan --recursive --log=scan.log /scandir > stdout.log
+          clamav_output='scan.log'
           sed -i '/^\s*$/d' $clamav_output
           awk -vmax="$(wc -l < $clamav_output)" -F: 'BEGIN{print "{"} NR>1{gsub(/^ /, "", $2); printf "%s", "\042"$1"\042:\042"$2"\042"; if (NR<max) {print ","}else{print ""}}; END{print "}"}' $clamav_output > scan.json
+          cat scan.json
+          cat stdout.log
         
       - name: AntiVirus results
         uses: actions/upload-artifact@v3

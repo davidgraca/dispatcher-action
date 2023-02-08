@@ -31,8 +31,7 @@ jobs:
         run: |
           clamav_output='scan.log'
           docker run --rm --mount type=bind,source=/home/runner/work/dispatcher-action/dispatcher-action,target=/scandir clamav/clamav:latest clamscan --recursive --log=/scandir/$clamav_output /scandir
-          sudo sed '/^\s*$/d' $clamav_output | awk -vmax="$(sudo cat $clamav_output | wc -l)" -F: 'BEGIN{print "{"} NR>1{gsub(/^ /, "", $2); printf "%s", "\042"$1"\042:\042"$2"\042"; if (NR<max-3) {print ","}else{print ""}}; END{print "}"}' > scan.json
-          cat "$clamav_output"
+          hsudo sed '/^\s*$/d' $clamav_output | awk -vmax="$(sudo cat $clamav_output | wc -l)" -F: 'BEGIN{print "{"} NR>1{gsub(/^ /, "", $2); printf "%s", "\042"$1"\042:\042"$2"\042"; if (NR<max-3) {print ","}else{print ""}}; END{print "}"}' > scan.json
         
       - name: AntiVirus results
         uses: actions/upload-artifact@v3

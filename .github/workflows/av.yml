@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       repo:
-        description: 'Repo URL to scan'
+        description: 'Repo URI to scan (user/repo)'
         required: true
       packagename:
         description: 'Package name'

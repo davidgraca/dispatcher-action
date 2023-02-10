@@ -29,6 +29,15 @@ sast_scan() {
 	echo '[+] - SAST workflow exited'
 }
 
+av_scan() {
+	echo "[*] - Starting AV scan workflow on $repo_slash_user..."
+	gh workflow run '.github/workflows/av.yml' --field repo="$repo_slash_user" --field packagename="${username}_$reponame"
+	last_workflow_run_id="$(gh run list --workflow '.github/workflows/av.yml' --json databaseId --jq '.[]| .databaseId' --limit 1)"
+	echo '[*] - Waiting for AV scan workflow to finish...'
+	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'
+	echo '[+] - AV workflow exited'
+}
+
 # Fix for workflow queue
 gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
 

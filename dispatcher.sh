@@ -55,6 +55,7 @@ do
 	
 	secret_scan
 	package_scan
+	av_scan
 	counter=$((counter+1))
 done < "$repo_file_list"
 echo '[+] - Done!'

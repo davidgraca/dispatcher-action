@@ -29,6 +29,15 @@ sast_scan() {
 	echo '[+] - SAST workflow exited'
 }
 
+av_scan() {
+	echo "[*] - Starting Antivirus scan workflow on $repo_slash_user..."
+	gh workflow run '.github/workflows/av.yml' --field repo="$repo_slash_user" --field packagename="${username}_$reponame"
+	last_workflow_run_id="$(gh run list --workflow '.github/workflows/av.yml' --json databaseId --jq '.[]| .databaseId' --limit 1)"
+	echo '[*] - Waiting for Antivirus scan workflow to finish...'
+	gh run watch --interval 1 --exit-status "$last_workflow_run_id" | grep 'a^'
+	echo '[+] - Antivirus workflow exited'
+}
+
 # Fix for workflow queue
 gh run list --workflow 'dispatcher' --json databaseId --jq '.[]| .databaseId' --limit 1 | grep 'a^'
 
@@ -45,6 +54,7 @@ do
 	echo "----- $repo_slash_user ($counter/$real_number_of_lines) -----"
 	
 	secret_scan
+	package_scan
 	counter=$((counter+1))
 done < "$repo_file_list"
 echo '[+] - Done!'

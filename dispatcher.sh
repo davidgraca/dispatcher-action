@@ -45,7 +45,6 @@ do
 	echo "----- $repo_slash_user ($counter/$real_number_of_lines) -----"
 	
 	secret_scan
-	sast_scan
 	counter=$((counter+1))
 done < "$repo_file_list"
 echo '[+] - Done!'
